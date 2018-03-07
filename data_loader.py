@@ -3,7 +3,7 @@ from __future__ import print_function
 from helper import *
 import os
 
-DataPath = 'prepare_data/'
+DataPath = 'SegNet_data/'
 data_shape = 512*512
 
 
@@ -21,17 +21,18 @@ def load_data(mode):
 
     return np.array(data), np.array(label)
 
+
 def lens():
     n = []
 
-    n.append(len([name for name in os.listdir('prepare_data/train') if os.path.isfile(os.path.join('prepare_data/train', name))]))
-    n.append(len([name for name in os.listdir('prepare_data/trainmask') if os.path.isfile(os.path.join('prepare_data/trainmask', name))]))
+    n.append(len([name for name in os.listdir('SegNet_data/train') if os.path.isfile(os.path.join('SegNet_data/train', name))]))
+    n.append(len([name for name in os.listdir('SegNet_data/trainmask') if os.path.isfile(os.path.join('SegNet_data/trainmask', name))]))
 
-    n.append(len([name for name in os.listdir('prepare_data/test/') if os.path.isfile(os.path.join('prepare_data/test/', name))]))
-    n.append(len([name for name in os.listdir('prepare_data/testmask/') if os.path.isfile(os.path.join('prepare_data/testmask/', name))]))
+    n.append(len([name for name in os.listdir('SegNet_data/test/') if os.path.isfile(os.path.join('SegNet_data/test/', name))]))
+    n.append(len([name for name in os.listdir('SegNet_data/testmask/') if os.path.isfile(os.path.join('SegNet_data/testmask/', name))]))
 
-    n.append(len([name for name in os.listdir('prepare_data/val/') if os.path.isfile(os.path.join('prepare_data/val/', name))]))
-    n.append(len([name for name in os.listdir('prepare_data/valmask/') if os.path.isfile(os.path.join('prepare_data/valmask/', name))]))
+    n.append(len([name for name in os.listdir('SegNet_data/val/') if os.path.isfile(os.path.join('SegNet_data/val/', name))]))
+    n.append(len([name for name in os.listdir('SegNet_data/valmask/') if os.path.isfile(os.path.join('SegNet_data/valmask/', name))]))
 
     return n
 
@@ -44,20 +45,20 @@ if __name__ == '__main__':
     test_data, test_label = load_data("test")
     test_label = np.reshape(test_label, (n[2], data_shape, 6))
 
-    np.save("prepare_data/test_data", test_data)
-    np.save("prepare_data/test_label", test_label)
+    np.save("SegNet_data/test_data", test_data)
+    np.save("SegNet_data/test_label", test_label)
 
     val_data, val_label = load_data("val")
     val_label = np.reshape(val_label, (n[4], data_shape, 6))
 
-    np.save("prepare_data/val_data", val_data)
-    np.save("prepare_data/val_label", val_label)
+    np.save("SegNet_data/val_data", val_data)
+    np.save("SegNet_data/val_label", val_label)
 
     train_data, train_label = load_data("train")
     train_label = np.reshape(train_label, (n[0], data_shape, 6))
 
-    np.save("prepare_data/train_data", train_data)
-    np.save("prepare_data/train_label", train_label)
+    np.save("SegNet_data/train_data", train_data)
+    np.save("SegNet_data/train_label", train_label)
 
     # FYI they are:
     # Impervious surfaces (RGB: 255, 255, 255)

@@ -5,12 +5,28 @@ import os
 import cv2
 import shutil
 
+
 #find /Users/kate/PycharmProjects/make_data -name '.DS_Store' -delete
+
+
+def lens(root):
+    n = []
+
+    n.append(len([name for name in os.listdir(root + 'train') if os.path.isfile(os.path.join(root + 'train', name))]))
+    n.append(len([name for name in os.listdir(root + 'trainmask') if os.path.isfile(os.path.join(root + 'trainmask', name))]))
+
+    n.append(len([name for name in os.listdir(root + 'test/') if os.path.isfile(os.path.join(root + 'test/', name))]))
+    n.append(len([name for name in os.listdir(root + 'testmask/') if os.path.isfile(os.path.join(root + 'testmask/', name))]))
+
+    n.append(len([name for name in os.listdir(root + 'val/') if os.path.isfile(os.path.join(root + 'val/', name))]))
+    n.append(len([name for name in os.listdir(root + 'valmask/') if os.path.isfile(os.path.join(root + 'valmask/', name))]))
+
+    return n
 
 
 def make_txt(path, path_an_not, dir):
 
-    f = open('prepare_data/' + str(dir) + '.txt', 'w')
+    f = open('SegNet_data/' + str(dir) + '.txt', 'w')
     n = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
 
     list_path = []
@@ -123,13 +139,34 @@ def metric(input):
     for legend in legend_list:
         m = legend - input
 
-        if m[0] < 128 and m[1] < 128 and m[2] < 128:
+        if m[0] == 0 and m[1] == 0 and m[2] == 0:
             index = legend_list.index(legend)
             # print(index)
             if index not in [0, 1, 2, 3, 4, 5]:
                 print('нужно искать баг, Катя', legend, input)
                 index = 4
             return index
+
+
+def out_metric(input):
+    # print(input)
+    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255]]
+    color = legend_list[input[0]]
+    return color
+
+
+def out_table(img):
+
+    h = np.shape(img)[0]
+    w = np.shape(img)[1]
+    new_array = np.zeros((h, w, 3))
+    for i in range(h):
+        for j in range(w):
+            # print(img[i][j])
+            buf = out_metric(img[i][j])
+            # print(buf)
+            new_array[i][j] = buf
+    return new_array
 
 
 def table(img):
@@ -157,65 +194,144 @@ def move_pictures(path, moveto, n):
         k += 1
 
 
-root = '/Volumes/Mac/WORK/'
+def binary_table(img):
+    h, w, z = np.shape(img)
+    new_array = np.zeros((h, w))
+    for i in range(h):
+        for j in range(w):
+            buf = binary_metric(img[i][j])
+            new_array[i][j] = buf
+    return new_array
+
+
+def binary_metric(input):
+    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255], [0, 0, 0],
+                   [255, 0, 255], [128, 128, 0], [0, 128, 128]]
+
+    if input[0] == 255 and input[1] == 255 and input[2] == 255:
+        return 0
+    else:
+        return 1
+
+
+def out_binary_table(img):
+    h, w, z = np.shape(img)
+    new_array = np.zeros((h, w))
+    for i in range(h):
+        for j in range(w):
+            buf = out_binary_metric(img[i][j])
+            # print(buf)
+            new_array[i][j] = buf
+    return new_array
+
+
+def out_binary_metric(input):
+    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255], [0, 0, 0],
+                   [255, 0, 255], [128, 128, 0], [0, 128, 128]]
+    color = legend_list[input[0]]
+    return color
+
+
+def binary_black_and_white(out_dir, save_dir):
+    color_pictures = out_dir
+    files = os.listdir(color_pictures)
+    print(out_dir)
+    i = 0
+
+    for file in files:
+        i += 1
+        print(save_dir + file)
+
+        img = cv2.imread(color_pictures + file)
+        img = np.array(img)
+
+        new_img = binary_table(img)
+        cv2.imwrite(save_dir + file, new_img)
+
+
+root = 'Unet_data/'
 
 
 if __name__ == '__main__':
 
+    # Unet картинок всего 349
+
     print('kxe-kxe')
-    n = 600
+    n = 367
 
-    path = root + "train/"
-    moveto = "prepare_data/" + "train/"
+    path = root +"images/"
+    moveto = root + "train/"
+
+    print(path, moveto)
+    move_pictures(path, moveto, n)
+
+    path = root + "mask/"
+    moveto = root + "trainmask/"
 
     move_pictures(path, moveto, n)
 
-    path = root + "trainmask/"
-    moveto = "prepare_data/trainmask/"
+    # n = 237
+    #
+    # path = root + "test/"
+    # moveto = "SegNet_data/" + "test/"
+    #
+    # print(path, moveto)
+    # move_pictures(path, moveto, n)
+    #
+    # path = root + "testmask/"
+    # moveto = "SegNet_data/testmask/"
+    #
+    # move_pictures(path, moveto, n)
 
-    move_pictures(path, moveto, n)
+    print(lens(root))
 
-    n = 100
-
-    path = root + "test/"
-    moveto = "prepare_data/" + "test/"
-
-    move_pictures(path, moveto, n)
-
-    path = root + "testmask/"
-    moveto = "prepare_data/testmask/"
-
-    move_pictures(path, moveto, n)
-
-    n = 200
-
-    path = root + "val/"
-    moveto = "prepare_data/" + "val/"
-
-    move_pictures(path, moveto, n)
-
-    path = root + "valmask/"
-    moveto = "prepare_data/valmask/"
-
-    move_pictures(path, moveto, n)
-
-    dir = 'test'
-    path = 'prepare_data/' + dir + '/'
-    path_mask = 'prepare_data/' + dir + 'mask/'
-    # #
+    # dir = 'new_test'
+    # path = 'Unet_data/' + dir + '/'
+    # path_mask = 'SegNet_data/' + dir + 'mask/'
+    #
     # # black_and_white(path_mask, path_mask)
-    make_txt(path, path_mask, dir)
-    # #
-    dir = 'train'
-    path = 'prepare_data/' + dir + '/'
-    path_mask = 'prepare_data/' + dir + 'mask/'
-    # #
-    # # black_and_white(path_mask, path_mask)
-    make_txt(path, path_mask, dir)
-    # #
-    dir = 'val'
-    path = 'prepare_data/' + dir + '/'
-    path_mask = 'prepare_data/' + dir + 'mask/'
-    # #
-    # # black_and_white(path_mask, path_mask)
-    make_txt(path, path_mask, dir)
+    # make_txt(path, path_mask, dir)
+
+    # dir = 'train'
+    # path = 'SegNet_data/' + dir + '/'
+    # path_mask = 'SegNet_data/' + dir + 'mask/'
+    #
+    # black_and_white(path_mask, path_mask)
+    # make_txt(path, path_mask, dir)
+    #
+    # dir = 'val'
+    # path = 'SegNet_data/' + dir + '/'
+    # path_mask = 'SegNet_data/' + dir + 'mask/'
+    #
+    # black_and_white(path_mask, path_mask)
+    # make_txt(path, path_mask, dir)
+
+    # n = 101
+    #
+    # path = root + "test/"
+    # moveto = "SegNet_data/" + "val/"
+    #
+    # move_pictures(path, moveto, n)
+    #
+    # path = root + "testmask/"
+    # moveto = "SegNet_data/valmask/"
+    #
+    # move_pictures(path, moveto, n)
+
+    # root = 'data/1Potsdam/'
+    #
+    # dir = 'test'
+    # path = 'SegNet_data/' + dir + '/'
+    # path_mask = 'SegNet_data/' + dir + 'mask/'
+    #
+    # algoritm(root + 'images/', path)
+    # algoritm(root + 'mask/', path_mask)
+
+    # root = 'Unet_data/1Vaihingen/'
+    #
+    # dir = 'train'
+    # path = 'SegNet_data/' + dir + '/'
+    # path_mask = 'SegNet_data/' + dir + 'mask/'
+    #
+    # algoritm(root + 'images/', path)
+    # algoritm(root + 'mask/', path_mask)
