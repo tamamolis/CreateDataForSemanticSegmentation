@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 
 # {'1': 1.0, '0': 1.0, '4': 1.0, '3': 1.0, '5': 2.898633430298013, '2': 1.0} RESULT
 
-DataPath = '/Users/kate/PycharmProjects/make_data/SegNet_data/'
+DataPath = '/Users/kate/PycharmProjects/Segnet.new/data/'
 
 
 def create_class_weight(labels_dict,mu=0.15):
@@ -25,7 +25,6 @@ def create_class_weight(labels_dict,mu=0.15):
 def create_labels_dict():
 
     labels_dict = {'0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0}
-
     files = os.listdir(DataPath + 'trainmask')
 
     for file in files:
@@ -41,14 +40,6 @@ def create_labels_dict():
 
 
 def compute_class_weight(class_weight, classes, y):
-
-    # if set(y) - set(classes):
-    #     raise ValueError("classes should include all valid labels that can "
-    #                      "be in y")
-
-    # if class_weight is None or len(class_weight) == 0:
-    #     # uniform class weights
-    #     weight = np.ones(classes.shape[0], dtype=np.float64, order='C')
 
     weight = np.ones(classes.shape[0], dtype=np.float64, order='C')
     if not isinstance(class_weight, dict):
@@ -66,10 +57,5 @@ def compute_class_weight(class_weight, classes, y):
 
 if __name__ == '__main__':
 
-    # labels_dict = create_labels_dict()
-    # print(labels_dict)
-
-    labels_dict = {'0': 19690400, '1': 41396793, '2': 15139685, '3': 7877999, '4': 11566821, '5': 797294} # уже посчитан в train_mask!
-
-    weights = create_class_weight(labels_dict)
-    print(create_class_weight(labels_dict))
+    labels_dict = create_labels_dict()
+    print(labels_dict)
