@@ -33,17 +33,18 @@ def table(img):
 
 
 def metric(input):
-    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255], [252, 40, 252]]
+    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
 
     for legend in legend_list:
         m = legend - input
 
         if m[0] == 0 and m[1] == 0 and m[2] == 0:
             index = legend_list.index(legend)
-            # print(index)
             if index not in [0, 1, 2, 3, 4, 5, 6]:
                 print('нужно искать баг, Катя', legend, input)
                 index = 4
+            if index == 5:
+                print('magenta!')
             return index
 
 
@@ -125,29 +126,20 @@ def make_txt(root, path, path_an_not, dir):
         f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
 
 
-root = 'SegNet_data/'
-# root = 'Test_data/'
+root = 'Test_data/test/'
 
 if __name__ == '__main__':
 
-    path = root + 'train/'
-    path_an_not = root + 'trainmask/'
-    dir = 'train'
+    path = root + 'crop_color/'
+    moveto = root + 'trash_color/'
 
-    black_and_white(path_an_not, path_an_not)
-
-    #############################
-
-    path = root + 'test/'
-    path_an_not = root + 'testmask/'
-    dir = 'test'
-
-    black_and_white(path_an_not, path_an_not)
+    n = 1400  # останется 927
+    move_pictures(path, moveto, n)
 
     ############################
 
-    path = root + 'val/'
-    path_an_not = root + 'valmask/'
-    dir = 'val'
+    path = root + 'crop_masks/'
+    moveto = root + 'trash_masks/'
 
-    black_and_white(path_an_not, path_an_not)
+    n = 1400  # останется 927
+    move_pictures(path, moveto, n)
