@@ -46,6 +46,47 @@ def make_txt(path, path_an_not, dir):
         f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
 
 
+def euclidean_metric(input):
+    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+    #  сумма модулей разности
+    total = 100000
+    index = -1
+
+    for legend in legend_list:
+        new_total = abs(input[0] - legend[0])**2 + abs(input[1] - legend[1])**2 + abs(input[2] - legend[2])**2
+        if new_total < total:
+            total = new_total
+            index = legend_list.index(legend)
+    return index
+
+
+def metric(input):
+    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+
+    for legend in legend_list:
+        m = legend - input
+
+        if m[0] == 0 and m[1] == 0 and m[2] == 0:
+            index = legend_list.index(legend)
+            if index not in [0, 1, 2, 3, 4, 5, 6]:
+                print('нужно искать баг, Катя', legend, input)
+                index = 4
+            if index == 5:
+                print('magenta!')
+            return index
+
+
+def table(img):
+    h, w, z = np.shape(img)
+    new_array = np.zeros((h, w))
+    for i in range(h):
+        for j in range(w):
+            buf = euclidean_metric(img[i][j])
+            # print(buf)
+            new_array[i][j] = buf
+    return new_array
+
+
 def black_and_white(out_dir, save_dir):
     color_pictures = out_dir
     files = os.listdir(color_pictures)
@@ -60,7 +101,7 @@ def black_and_white(out_dir, save_dir):
         img = np.array(img)
 
         new_img = table(img)
-        cv2.imwrite(save_dir + file, new_img)
+        cv2.imwrite(save_dir + 'new' + file, new_img)
 
 
 def algoritm(path, path_save):
@@ -133,24 +174,9 @@ def crop_img(dir):
     algoritm(path, path_save)
 
 
-def metric(input):
-    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255]]
-
-    for legend in legend_list:
-        m = legend - input
-
-        if m[0] == 0 and m[1] == 0 and m[2] == 0:
-            index = legend_list.index(legend)
-            # print(index)
-            if index not in [0, 1, 2, 3, 4, 5]:
-                print('нужно искать баг, Катя', legend, input)
-                index = 4
-            return index
-
-
 def out_metric(input):
     # print(input)
-    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255]]
+    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
     color = legend_list[input[0]]
     return color
 
@@ -169,15 +195,21 @@ def out_table(img):
     return new_array
 
 
-def table(img):
-    h, w, z = np.shape(img)
-    new_array = np.zeros((h, w))
-    for i in range(h):
-        for j in range(w):
-            buf = metric(img[i][j])
-            # print(buf)
-            new_array[i][j] = buf
-    return new_array
+def out_black_and_white(out_dir, save_dir):
+    color_pictures = out_dir
+    files = os.listdir(color_pictures)
+    print(out_dir)
+    i = 0
+
+    for file in files:
+        i += 1
+        print(save_dir + file)
+
+        img = cv2.imread(color_pictures + file)
+        img = np.array(img)
+
+        new_img = out_table(img)
+        cv2.imwrite(save_dir + 'new' + file, new_img)
 
 
 def move_pictures(path, moveto, n):
@@ -194,144 +226,17 @@ def move_pictures(path, moveto, n):
         k += 1
 
 
-def binary_table(img):
-    h, w, z = np.shape(img)
-    new_array = np.zeros((h, w))
-    for i in range(h):
-        for j in range(w):
-            buf = binary_metric(img[i][j])
-            new_array[i][j] = buf
-    return new_array
-
-
-def binary_metric(input):
-    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255], [0, 0, 0],
-                   [255, 0, 255], [128, 128, 0], [0, 128, 128]]
-
-    if input[0] == 255 and input[1] == 255 and input[2] == 255:
-        return 0
-    else:
-        return 1
-
-
-def out_binary_table(img):
-    h, w, z = np.shape(img)
-    new_array = np.zeros((h, w))
-    for i in range(h):
-        for j in range(w):
-            buf = out_binary_metric(img[i][j])
-            # print(buf)
-            new_array[i][j] = buf
-    return new_array
-
-
-def out_binary_metric(input):
-    legend_list = [[255, 255, 255], [255, 255, 0], [0, 255, 0], [0, 0, 255], [255, 0, 0], [0, 255, 255], [0, 0, 0],
-                   [255, 0, 255], [128, 128, 0], [0, 128, 128]]
-    color = legend_list[input[0]]
-    return color
-
-
-def binary_black_and_white(out_dir, save_dir):
-    color_pictures = out_dir
-    files = os.listdir(color_pictures)
-    print(out_dir)
-    i = 0
-
-    for file in files:
-        i += 1
-        print(save_dir + file)
-
-        img = cv2.imread(color_pictures + file)
-        img = np.array(img)
-
-        new_img = binary_table(img)
-        cv2.imwrite(save_dir + file, new_img)
-
-
-root = 'Unet_data/'
+root = 'Test_data/'
 
 
 if __name__ == '__main__':
 
-    # Unet картинок всего 349
+    out_dir = root + 'test/'
+    save_dir = root + 'test_save/'
 
-    print('kxe-kxe')
-    n = 367
+    black_and_white(out_dir, save_dir)
 
-    path = root +"images/"
-    moveto = root + "train/"
+    save_dir = root + 'test/'
+    out_dir = root + 'test_save/'
 
-    print(path, moveto)
-    move_pictures(path, moveto, n)
-
-    path = root + "mask/"
-    moveto = root + "trainmask/"
-
-    move_pictures(path, moveto, n)
-
-    # n = 237
-    #
-    # path = root + "test/"
-    # moveto = "SegNet_data/" + "test/"
-    #
-    # print(path, moveto)
-    # move_pictures(path, moveto, n)
-    #
-    # path = root + "testmask/"
-    # moveto = "SegNet_data/testmask/"
-    #
-    # move_pictures(path, moveto, n)
-
-    print(lens(root))
-
-    # dir = 'new_test'
-    # path = 'Unet_data/' + dir + '/'
-    # path_mask = 'SegNet_data/' + dir + 'mask/'
-    #
-    # # black_and_white(path_mask, path_mask)
-    # make_txt(path, path_mask, dir)
-
-    # dir = 'train'
-    # path = 'SegNet_data/' + dir + '/'
-    # path_mask = 'SegNet_data/' + dir + 'mask/'
-    #
-    # black_and_white(path_mask, path_mask)
-    # make_txt(path, path_mask, dir)
-    #
-    # dir = 'val'
-    # path = 'SegNet_data/' + dir + '/'
-    # path_mask = 'SegNet_data/' + dir + 'mask/'
-    #
-    # black_and_white(path_mask, path_mask)
-    # make_txt(path, path_mask, dir)
-
-    # n = 101
-    #
-    # path = root + "test/"
-    # moveto = "SegNet_data/" + "val/"
-    #
-    # move_pictures(path, moveto, n)
-    #
-    # path = root + "testmask/"
-    # moveto = "SegNet_data/valmask/"
-    #
-    # move_pictures(path, moveto, n)
-
-    # root = 'data/1Potsdam/'
-    #
-    # dir = 'test'
-    # path = 'SegNet_data/' + dir + '/'
-    # path_mask = 'SegNet_data/' + dir + 'mask/'
-    #
-    # algoritm(root + 'images/', path)
-    # algoritm(root + 'mask/', path_mask)
-
-    # root = 'Unet_data/1Vaihingen/'
-    #
-    # dir = 'train'
-    # path = 'SegNet_data/' + dir + '/'
-    # path_mask = 'SegNet_data/' + dir + 'mask/'
-    #
-    # algoritm(root + 'images/', path)
-    # algoritm(root + 'mask/', path_mask)
+    out_black_and_white(out_dir, save_dir)

@@ -126,7 +126,7 @@ def make_txt(root, path, path_an_not, dir):
         f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
 
 
-root = 'Test_data/test/'
+root = 'Test_data/'
 
 if __name__ == '__main__':
 
