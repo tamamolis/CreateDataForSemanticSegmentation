@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import shutil
 
+legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+
 
 def black_and_white(out_dir, save_dir):
     color_pictures = out_dir
@@ -26,32 +28,23 @@ def table(img):
     new_array = np.zeros((h, w))
     for i in range(h):
         for j in range(w):
-            buf = metric(img[i][j])
+            buf = euclidean_metric(img[i][j])
             # print(buf)
             new_array[i][j] = buf
     return new_array
 
 
-def metric(input):
-    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+def euclidean_metric(input):
+    #  сумма модулей разности
+    total = 100000
+    index = -1
 
     for legend in legend_list:
-        m = legend - input
-
-        if m[0] == 0 and m[1] == 0 and m[2] == 0:
+        new_total = abs(input[0] - legend[0])**2 + abs(input[1] - legend[1])**2 + abs(input[2] - legend[2])**2
+        if new_total < total:
+            total = new_total
             index = legend_list.index(legend)
-            if index not in [0, 1, 2, 3, 4, 5, 6]:
-                print('нужно искать баг, Катя', legend, input)
-                index = 4
-            if index == 5:
-                print('magenta!')
-            return index
-
-
-def sliding_window(image, stepSize, windowSize):
-    for y in range(0, image.shape[0], stepSize):
-        for x in range(0, image.shape[1], stepSize):
-            yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
+    return index
 
 
 def algoritm(path, path_save):
@@ -62,8 +55,8 @@ def algoritm(path, path_save):
         print(path + file)
 
         h, w, channels = img.shape
-        print('ширина и высота: ', w, h)
 
+        print('ширина и высота: ', w, h)
         print(path)
 
         windowSize = [360, 480]
@@ -72,7 +65,7 @@ def algoritm(path, path_save):
         for y in range(0, img.shape[0], stepSize):
             for x in range(0, img.shape[1], stepSize):
                 try:
-                    crop_img = img [y:y + windowSize[0], x:x + windowSize[1]]
+                    crop_img = img[y:y + windowSize[0], x:x + windowSize[1]]
                     l = len(str(file))
                     name = file[:l-4]
                     cv2.imwrite(path_save + name + str(y) + str(x) + '.png', crop_img)
@@ -126,20 +119,33 @@ def make_txt(root, path, path_an_not, dir):
         f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
 
 
-root = 'Test_data/'
+root = 'SegNet_data/'
+# всего 927
+# 300 на валидацию
+# 27 на тест
 
 if __name__ == '__main__':
 
-    path = root + 'crop_color/'
-    moveto = root + 'trash_color/'
+    out_dir = root + 'testmask/'
+    save_dir = root + 'testmask/'
+    dir = 'test'
+    path = root + dir + '/'
 
-    n = 1400  # останется 927
-    move_pictures(path, moveto, n)
+    black_and_white(out_dir, save_dir)
+    make_txt(root, path, save_dir, dir)
 
-    ############################
+    out_dir = root + 'trainmask/'
+    save_dir = root + 'trainmask/'
+    dir = 'train'
+    path = root + dir + '/'
 
-    path = root + 'crop_masks/'
-    moveto = root + 'trash_masks/'
+    black_and_white(out_dir, save_dir)
+    make_txt(root, path, save_dir, dir)
 
-    n = 1400  # останется 927
-    move_pictures(path, moveto, n)
+    out_dir = root + 'valmask/'
+    save_dir = root + 'valmask/'
+    dir = 'val'
+    path = root + dir + '/'
+
+    black_and_white(out_dir, save_dir)
+    make_txt(root, path, save_dir, dir)

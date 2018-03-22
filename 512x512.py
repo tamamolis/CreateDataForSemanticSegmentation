@@ -6,7 +6,7 @@ import cv2
 import shutil
 
 
-#find /Users/kate/PycharmProjects/make_data -name '.DS_Store' -delete
+#  find /Users/kate/PycharmProjects/make_data -name '.DS_Store' -delete
 
 
 def lens(root):
@@ -146,32 +146,6 @@ def algoritm(path, path_save):
 
         print(count)
     return 0
-
-
-def crop_img(dir):
-    # dir = 'notPotsdam/notmasks/'
-
-    path = 'other_data/' + dir
-    path_save = dir
-    algoritm(path, path_save)
-
-    dir = 'notPotsdam/masks/'
-
-    path = 'other_data/' + dir
-    path_save = dir
-    algoritm(path, path_save)
-
-    dir = 'Potsdam/notmasks/'
-
-    path = 'other_data/' + dir
-    path_save = dir
-    algoritm(path, path_save)
-
-    dir = 'Potsdam/masks/'
-
-    path = 'other_data/' + dir
-    path_save = dir
-    algoritm(path, path_save)
 
 
 def out_metric(input):

@@ -25,17 +25,9 @@ def normalized(rgb):
 
 
 def one_hot_it(labels):
-    x = np.zeros([360, 480, 6])  # здесь 6, хотя в оригинале 12, мне кажется, это ошибка, ведь классов 13, и
+    x = np.zeros([360, 480, 7])  # здесь 6, хотя в оригинале 12, мне кажется, это ошибка, ведь классов 13, и
                                  #  в этом случае указывается кол-во, т.е. нумерация не с нуля
     for i in range(360):
         for j in range(480):
-            try:
-                if labels[i][j] > 5:
-                    print(labels[i][j], i, j)
-                    labels[i][j] = 5
-
-                x[i, j, labels[i][j]] = 1
-            except IndexError:
-                print(i, j, np.shape(labels))
-                x[i, j, 5] = 1
+            x[i, j, labels[i][j]] = 1
     return x
