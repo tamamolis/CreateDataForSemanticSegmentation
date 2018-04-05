@@ -17,8 +17,8 @@ Original image:
 
 Crop image:
 
-https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/crop.png
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/crop.png)
 
 Label image:
 
-https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/label.png
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/label.png)
