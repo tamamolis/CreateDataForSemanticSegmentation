@@ -10,6 +10,7 @@ This project create data for semantic segmentation:
    [255, 0, 255] -->   5
    [255, 0, 0] -->     6
 3) create npy-arrays for fast reading from disk
+4) create a txt-files with names of images for creating npy-arrays
 
 Original image:
 
