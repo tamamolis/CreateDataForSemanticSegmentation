@@ -3,7 +3,7 @@ This project create data for semantic segmentation:
 1. crop images 
 2. convert masks from color with three channel to one-channel label. 
    1. For examplе my legend list:
-      [0, 0, 255] -->     0
+      [0, 0, 255] -->     0 /n
       [0, 255, 0] -->     1 
       [255, 255, 0] -->   2
       [255, 255, 255] --> 3
