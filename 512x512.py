@@ -7,6 +7,7 @@ import shutil
 
 
 #  find /Users/kate/PycharmProjects/make_data -name '.DS_Store' -delete
+legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0], [0, 0, 0]]
 
 
 def lens(root):
@@ -47,7 +48,7 @@ def make_txt(path, path_an_not, dir):
 
 
 def euclidean_metric(input):
-    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+
     #  сумма модулей разности
     total = 100000
     index = -1
@@ -61,7 +62,6 @@ def euclidean_metric(input):
 
 
 def metric(input):
-    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
 
     for legend in legend_list:
         m = legend - input
@@ -150,7 +150,6 @@ def algoritm(path, path_save):
 
 def out_metric(input):
     # print(input)
-    legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
     color = legend_list[input[0]]
     return color
 
@@ -207,10 +206,5 @@ if __name__ == '__main__':
 
     out_dir = root + 'test/'
     save_dir = root + 'test_save/'
-
-    black_and_white(out_dir, save_dir)
-
-    save_dir = root + 'test/'
-    out_dir = root + 'test_save/'
 
     out_black_and_white(out_dir, save_dir)

@@ -75,7 +75,7 @@ def algoritm(path, path_save):
         print('ширина и высота: ', w, h)
         print(path)
 
-        windowSize = [360, 480]
+        windowSize = [416, 608]
         stepSize = 50
 
         for y in range(0, img.shape[0], stepSize):
