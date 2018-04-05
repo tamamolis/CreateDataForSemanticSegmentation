@@ -13,16 +13,16 @@ This project create data for semantic segmentation:
 
 Original image:
 
-![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/original.png)
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/images/original.png)
 
 Crop image:
 
-![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/crop.png)
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/images/crop.png)
 
 Label image:
 
-![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/label.png)
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/images/label.png)
 
 I increased the brightness so that it was clear why the label look so:
 
-![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/bright%20label.jpg)
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/images/bright%20label.jpg)
