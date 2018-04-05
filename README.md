@@ -22,3 +22,7 @@ Crop image:
 Label image:
 
 ![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/label.png)
+
+I increased the brightness so that it was clear why the label look so:
+
+![alt text](https://github.com/tamamolis/CreateDataForSemanticSegmentation/blob/master/bright%20label.jpg)
