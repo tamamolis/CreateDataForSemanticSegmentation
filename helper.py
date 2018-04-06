@@ -10,7 +10,6 @@ import os
 
 
 def normalized(rgb):
-    # return rgb/255.0
     norm = np.zeros((rgb.shape[0], rgb.shape[1], 3), np.float32)
 
     b = rgb[:, :, 0]
@@ -25,9 +24,9 @@ def normalized(rgb):
 
 
 def one_hot_it(labels):
-    x = np.zeros([360, 480, 7])  # здесь 6, хотя в оригинале 12, мне кажется, это ошибка, ведь классов 13, и
+    x = np.zeros([416, 608, 7])  # здесь 6, хотя в оригинале 12, мне кажется, это ошибка, ведь классов 13, и
                                  #  в этом случае указывается кол-во, т.е. нумерация не с нуля
-    for i in range(360):
-        for j in range(480):
+    for i in range(416):
+        for j in range(608):
             x[i, j, labels[i][j]] = 1
     return x

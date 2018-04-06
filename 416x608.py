@@ -95,7 +95,7 @@ def delete_img(path):
     for file in files:
         img = cv2.imread(path + file)
         # print(np.shape(img))
-        if np.shape(img) != (360, 480, 3):
+        if np.shape(img) != (416, 608, 3):
             os.remove(path + file)
     return 0
 
@@ -135,14 +135,21 @@ def make_txt(root, path, path_an_not, dir):
         f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
 
 
-root = 'SegNet_data/'
+root = '/Users/kate/PycharmProjects/make_data/VGG_Segnet/'
 
 # всего 927
-# 300 на валидацию
-# 27 на тест
+# 80 к 20 на train и test
+# получается: train = 742, test = 185
+# train 80 к 20
+# получается: train = 593, val = 148
 
 if __name__ == '__main__':
 
-    make_txt(root, root + 'test/', root + 'testmask/', 'test')
-    make_txt(root, root + 'train/', root + 'trainmask/', 'train')
-    make_txt(root, root + 'val/', root + 'valmask/', 'val')
+    out_dir = '/Users/kate/PycharmProjects/make_data/VGG_Segnet/testmask/'
+    black_and_white(out_dir, out_dir)
+
+    out_dir = '/Users/kate/PycharmProjects/make_data/VGG_Segnet/trainmask/'
+    black_and_white(out_dir, out_dir)
+
+    out_dir = '/Users/kate/PycharmProjects/make_data/VGG_Segnet/valmask/'
+    black_and_white(out_dir, out_dir)
