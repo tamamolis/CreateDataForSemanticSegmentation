@@ -135,7 +135,7 @@ def make_txt(root, path, path_an_not, dir):
         f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
 
 
-root = 'SegNet_data/'
+root = 'Test_data/'
 
 # всего 927
 # 300 на валидацию
@@ -143,6 +143,4 @@ root = 'SegNet_data/'
 
 if __name__ == '__main__':
 
-    make_txt(root, root + 'test/', root + 'testmask/', 'test')
-    make_txt(root, root + 'train/', root + 'trainmask/', 'train')
-    make_txt(root, root + 'val/', root + 'valmask/', 'val')
+    make_txt(root, root + 'crop/', root + 'crop/', 'test')

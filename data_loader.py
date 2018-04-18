@@ -3,8 +3,7 @@ from __future__ import print_function
 from helper import *
 import os
 
-DataPath = "VGG_SegNet/"
-data_shape = 416*608
+data_shape = 360*480
 
 
 def load_data(mode):
@@ -15,9 +14,9 @@ def load_data(mode):
         txt = [line.split(" ") for line in txt]
 
     for i in range(len(txt)):
-        print(os.getcwd() + "/" + txt[i][0][49:])
-        data.append(np.rollaxis(normalized(cv2.imread(os.getcwd() + "/" + txt[i][0][49:])), 2))
-        label.append(one_hot_it(cv2.imread(os.getcwd() + "/" + txt[i][1][49:][:-1])[:, :, 0]))
+        print(os.getcwd() + '/' + txt[i][0][11:])
+        data.append(np.rollaxis(normalized(cv2.imread(os.getcwd() + '/' + txt[i][0][11:])), 2))
+        # label.append(one_hot_it(cv2.imread(os.getcwd() + "/" + txt[i][1][49:][:-1])[:, :, 0]))
     return np.array(data), np.array(label)
 
 
@@ -36,26 +35,13 @@ def lens():
     return n
 
 
+DataPath = "Test/"
+
+
 if __name__ == "__main__":
 
-    n = lens()
-    print(n, n[0], n[2], n[4])
+    # n = lens()
+    # print(n, n[0], n[2], n[4])
 
     test_data, test_label = load_data("test")
-    test_label = np.reshape(test_label, (n[2], data_shape, 7))
-
-    np.save(DataPath + "/test_data", test_data)
-    np.save(DataPath + "/test_label", test_label)
-
-    val_data, val_label = load_data("val")
-    val_label = np.reshape(val_label, (n[4], data_shape, 7))
-
-    np.save(DataPath + "/val_data", val_data)
-    np.save(DataPath + "/val_label", val_label)
-
-    train_data, train_label = load_data("train")
-    train_label = np.reshape(train_label, (n[0], data_shape, 7))
-
-    np.save(DataPath + "/train_data", train_data)
-    np.save("SegNet_data/train_label", train_label)
-
+    np.save(DataPath + "/crop", test_data)

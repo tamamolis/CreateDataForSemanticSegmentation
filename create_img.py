@@ -7,8 +7,8 @@ import os
 import cv2
 import numpy as np
 
-h = 416
-w = 608
+h = 360
+w = 480
 res_im = 0
 
 def crop(path, path_save):
@@ -61,6 +61,7 @@ def concat(path, path_save):
             IndexError
     delete_img(path)
     files = os.listdir(path)
+    files_new = os.listdir(path_save)
     Flag = True
     print(files)
 
@@ -74,11 +75,11 @@ def concat(path, path_save):
                 cv2.imwrite(path_save + str(i) + 'result.png', res_im)
                 Flag = False
             else:
-                im1 = cv2.imread(path_save + files[i])
+                im1 = cv2.imread(path_save + files_new [i])
                 im2 = cv2.imread(path + files[i + 1])
                 res_im = np.concatenate((im1, im2), axis=0)
 
-                cv2.imwrite(path_save + files[i], res_im)
+                cv2.imwrite(path_save + files_new[i], res_im)
                 cv2.imwrite(path_save + str(i) + str(i) + 'two_result.png', res_im)
         except:
             IndexError
@@ -100,7 +101,9 @@ if __name__ == '__main__':
     path = DataPath + 'orig/'
     path_save = DataPath + 'res/'
     crop(path, path_save)
+    path_save = DataPath + 'crop/'
+    crop(path, path_save)
 
-    path = DataPath + 'res/'
-    path_save = DataPath + 'new_img/'
-    concat(path, path_save)
+    # path = DataPath + 'res/'
+    # path_save = DataPath + 'new_img/'
+    # concat(path, path_save)
