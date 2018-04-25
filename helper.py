@@ -10,7 +10,6 @@ import os
 
 
 def normalized(rgb):
-    # return rgb/255.0
     norm = np.zeros((rgb.shape[0], rgb.shape[1], 3), np.float32)
 
     b = rgb[:, :, 0]

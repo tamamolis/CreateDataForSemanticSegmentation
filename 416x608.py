@@ -6,20 +6,20 @@ import shutil
 legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
 
 
-def only_name_txt(root, path_an_not, dir):
+def only_name_txt(root, pathmask, dir):
 
     f = open(root + str(dir) + '.txt', 'w')
-    m = len([name for name in os.listdir(path_an_not) if os.path.isfile(os.path.join(path_an_not, name))])
+    m = len([name for name in os.listdir(pathmask) if os.path.isfile(os.path.join(pathmask, name))])
 
     print(m)
 
-    list_pathannot = []
+    list_mask = []
 
-    for name in os.listdir(path_an_not):
-        list_pathannot.append(str(name))
+    for name in os.listdir(pathmask):
+        list_mask.append(str(name))
 
     for i in range(m):
-        f.write(str(list_pathannot[i]) + '\n')
+        f.write(str(list_mask[i]) + '\n')
 
 
 def black_and_white(out_dir, save_dir):
@@ -75,7 +75,7 @@ def algoritm(path, path_save):
         print('ширина и высота: ', w, h)
         print(path)
 
-        windowSize = [360, 480]
+        windowSize = [416, 608]
         stepSize = 50
 
         for y in range(0, img.shape[0], stepSize):
@@ -95,8 +95,48 @@ def delete_img(path):
     for file in files:
         img = cv2.imread(path + file)
         # print(np.shape(img))
-        if np.shape(img) != (360, 480, 3):
+        if np.shape(img) != (416, 608, 3):
             os.remove(path + file)
+    return 0
+
+
+def check(path_mask, file):
+    img = cv2.imread(path_mask + file)
+    h, w, z = np.shape(img)
+    flag = 0
+    for i in range(h):
+        for j in range(w):
+            if img[i][j][0] == 0 & img[i][j][1] == 0 & img[i][j][2] == 0:
+                flag += 1
+        if flag >= 75:
+            return True
+        else:
+            return False
+
+
+def delete_color(path):
+
+    list_of_names = []
+    path_mask = path + 'mask/'
+    files = os.listdir(path_mask)
+    files.sort()
+    for file in files:
+        print(file)
+        if check(path_mask, file):
+            list_of_names.append(file)
+            print('mask: ', path_mask + file)
+            os.remove(path_mask + file)
+
+    path_img = path + 'img/'
+    files = os.listdir(path_img)
+    files.sort()
+    i = 0
+    for file in files:
+        for img in list_of_names:
+            if file == img:
+                print('img: ', path_img + file)
+                os.remove(path_img + file)
+                break;
     return 0
 
 
@@ -114,33 +154,41 @@ def move_pictures(path, moveto, n):
         k += 1
 
 
-def make_txt(root, path, path_an_not, dir):
+def make_txt(root, path, pathmask, dir):
 
     f = open(root + str(dir) + '.txt', 'w')
     n = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
-    m = len([name for name in os.listdir(path_an_not) if os.path.isfile(os.path.join(path_an_not, name))])
+    m = len([name for name in os.listdir(pathmask) if os.path.isfile(os.path.join(pathmask, name))])
 
     print(n, m)
 
     list_path = []
-    list_pathannot = []
+    list_mask = []
 
     for name in os.listdir(path):
         list_path.append('/make_data/' + str(path) + str(name))
 
-    for name in os.listdir(path_an_not):
-        list_pathannot.append('/make_data/' + str(path_an_not) + str(name))
+    for name in os.listdir(pathmask):
+        list_mask.append('/make_data/' + str(pathmask) + str(name))
 
     for i in range(n):
-        f.write(str(list_path[i]) + ' ' + str(list_pathannot[i]) + '\n')
+        f.write(str(list_path[i]) + ' ' + str(list_mask[i]) + '\n')
+
+# TODO: всего 927
+# TODO:  80 к 20 на train и test
+# TODO: получается: train = 742, test = 185
+# TODO:  train 80 к 20
+# TODO: получается: train = 593, val = 148
+# TODO:  Хельсинки, картинки 2, 3, 4, 9 -- train, test -- 7
+# TODO:  ls -l | grep ^- | wc -l
 
 
-root = 'Test_data/'
+root = '/Users/kate/PycharmProjects/make_data/Test_data/'
 
-# всего 927
-# 300 на валидацию
-# 27 на тест
 
 if __name__ == '__main__':
 
-    make_txt(root, root + 'crop/', root + 'crop/', 'test')
+    path = root + 'test/'
+    moveto = root + 'new_img/'
+    dir = 'test'
+    only_name_txt(root, path, dir)
