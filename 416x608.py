@@ -3,7 +3,11 @@ import cv2
 import numpy as np
 import shutil
 
-legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+# синий, зелёный, жёлтый, белый, бирюзовый, magenta, красный
+# legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 0], [255, 255, 255], [0, 255, 255], [255, 0, 255], [255, 0, 0]]
+
+# синий, зелёный, белый, красный
+legend_list = [[0, 0, 255], [0, 255, 0], [255, 255, 255], [255, 0, 0]]
 
 
 def only_name_txt(root, pathmask, dir):
@@ -56,7 +60,7 @@ def euclidean_metric(input):
     index = -1
 
     for legend in legend_list:
-        new_total = abs(input[0] - legend[0])**2 + abs(input[1] - legend[1])**2 + abs(input[2] - legend[2])**2
+        new_total = abs(input[0] - legend[0]) + abs(input[1] - legend[1]) + abs(input[2] - legend[2])
         if new_total < total:
             total = new_total
             index = legend_list.index(legend)
@@ -174,6 +178,26 @@ def make_txt(root, path, pathmask, dir):
     for i in range(n):
         f.write(str(list_path[i]) + ' ' + str(list_mask[i]) + '\n')
 
+
+def histogram_equalize(im, path):
+    print(im)
+    img = cv2.imread(path + im)
+    # print(img)
+    b, g, r = cv2.split(img)
+    red = cv2.equalizeHist(r)
+    green = cv2.equalizeHist(g)
+    blue = cv2.equalizeHist(b)
+    return cv2.merge((blue, green, red))
+
+
+def hist_all_pictures_in_folder(path):
+    files = os.listdir(path)
+    i = 0
+    for file in files:
+        img = histogram_equalize(file, path)
+        cv2.imwrite(path + str(i) + '.png', img)
+        i += 1
+
 # TODO: всего 927
 # TODO:  80 к 20 на train и test
 # TODO: получается: train = 742, test = 185
@@ -183,12 +207,25 @@ def make_txt(root, path, pathmask, dir):
 # TODO:  ls -l | grep ^- | wc -l
 
 
-root = '/Users/kate/PycharmProjects/make_data/Test_data/'
+# root = '/Users/kate/PycharmProjects/make_data/Test_data/'
 
 
 if __name__ == '__main__':
 
-    path = root + 'test/'
-    moveto = root + 'new_img/'
-    dir = 'test'
-    only_name_txt(root, path, dir)
+    os.system("find /Users/kate/PycharmProjects/make_data -name '.DS_Store' -delete")
+
+    path = 'VGG_Unet_hist_data/train/img/'
+    algoritm(path, path)
+    delete_img(path)
+
+    path_mask = 'VGG_Unet_hist_data/train/mask/'
+    algoritm(path_mask, path_mask)
+    delete_img(path_mask)
+
+    # path = 'VGG_Unet_hist_data/val/img/'
+    # algoritm(path, path)
+    # delete_img(path)
+
+    # path_mask = 'VGG_Unet_hist_data/val/mask/'
+    # algoritm(path_mask, path_mask)
+    # delete_img(path_mask)
