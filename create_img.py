@@ -61,7 +61,7 @@ def concat(path, path_save):
                     os.remove(path + files[i+1])
         except:
             IndexError
-    delete_img(path)
+    # delete_img(path)
     files = os.listdir(path)
     files_new = os.listdir(path_save)
     Flag = True
@@ -70,21 +70,21 @@ def concat(path, path_save):
     for i in range(len(files)):
         try:
             if Flag:
-                im1 = cv2.imread(path + files[i])
-                im2 = cv2.imread(path + files[i + 1])
-                res_im = np.concatenate((im1, im2), axis=0)
-                cv2.imwrite(path_save + files[i], res_im)
-                cv2.imwrite(path_save + str(i) + 'result.png', res_im)
-                Flag = False
+                    im1 = cv2.imread(path + files[i])
+                    im2 = cv2.imread(path + files[i + 1])
+                    res_im = np.concatenate((im1, im2), axis=0)
+                    cv2.imwrite(path_save + files[i], res_im)
+                    cv2.imwrite(path_save + str(i) + 'result.png', res_im)
+                    Flag = False
             else:
-                im1 = cv2.imread(path_save + files_new [i])
-                im2 = cv2.imread(path + files[i + 1])
-                res_im = np.concatenate((im1, im2), axis=0)
+                    im1 = cv2.imread(path_save + files_new[i])
+                    im2 = cv2.imread(path + files[i + 1])
+                    res_im = np.concatenate((im1, im2), axis=0)
 
-                cv2.imwrite(path_save + files_new[i], res_im)
-                cv2.imwrite(path_save + str(i) + str(i) + 'two_result.png', res_im)
+                    cv2.imwrite(path_save + files_new[i], res_im)
+                    cv2.imwrite(path_save + str(i) + str(i) + 'two_result.png', res_im)
         except:
-            IndexError
+                IndexError
 
 
 def delete_img(path):
@@ -102,11 +102,20 @@ def big_image_from_small_image(path_crop, path_save):
     files = os.listdir(path_crop)
     files.sort()
     print(files)
-    for i in range(len(files)):
-        crop_arr.append(cv2.imread(path_crop + files[i]))
-    print(np.shape(crop_arr))
-    crop_arr = np.reshape(crop_arr, (416*12, 380*12, 3))
-    rgb = array_to_img(crop_arr)
+
+    for file in files:
+        crop_arr.append(cv2.imread(path_crop + file))
+
+    arr = np.zeros((3, 4, 416, 608, 3))
+    k = 0
+    for i in range(3):
+        for j in range(4):
+            arr[i][j] = crop_arr[k]
+            k += 1
+
+    crop_arr = np.reshape(crop_arr, (608*3, 416*4, 3))
+    arr = np.reshape(arr, (416*3, 608*4, 3))
+    rgb = array_to_img(arr)
     rgb.save(path_save + 'res.png')
     # cv2.imwrite(path_save + 'res.png', crop_arr)
 
@@ -116,8 +125,14 @@ DataPath = '/Users/kate/PycharmProjects/make_data/Test_data/'
 
 if __name__ == '__main__':
 
+    os.system("find /Users/kate/PycharmProjects/make_data -name '.DS_Store' -delete")
     path_orig = DataPath + 'orig/'
     path_crop = DataPath + 'res/'
     path_save = DataPath + 'new_img/'
+    Flag = 0
 
-    big_image_from_small_image(path_crop, path_save)
+    if Flag:
+        crop(path_orig, path_crop)
+    else:
+        for i in range(4):
+            concat(path_crop, path_save)
